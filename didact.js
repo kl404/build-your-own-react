@@ -243,6 +243,7 @@ function createElement(type, props, ...children) {
     reconcileChildren(fiber, fiber.props.children)
   }
   
+  //给子元素创建fiber
   function reconcileChildren(wipFiber, elements) {
     let index = 0
     let oldFiber =
