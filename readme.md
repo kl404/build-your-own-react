@@ -68,7 +68,7 @@ requestIdleCallback(workLoop);
 3. select the next unit of work
    选择下一个工作单元
 
-![alt text](image-3.png)
+![alt text](image-8.png)
 
 ## Step 5: Render and Commit
 为了不要生成一点就添加一点 Dom node，删除上面每个任务单元中的第一件事，然后添加一个 commit 阶段，统一添加真实Dom
