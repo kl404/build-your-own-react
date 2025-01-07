@@ -78,8 +78,7 @@ requestIdleCallback(workLoop);
 
 
 ## Step 6: Reconciliation
-为了 diff，
-多了一个 currentRoot，和工作中的 wipRppt去reconcile，在生成每一个 fiber 节点的时候，去对比，是 crud 中的啥操作
+为了 diff，多了一个 currentRoot，和工作中的 wipRppt去reconcile，在生成每一个 fiber 节点的时候，去对比，是 crud 中的啥操作
 
 ![alt text](image-4.png)
 
@@ -119,5 +118,74 @@ const element = Didact.createElement(App, {
 
 ## Step 8: Hooks
 
-每一个组件函数都是一个 fiber，组件的 fiber 有一个 hooks 数组，维护所有的 hooks
+每一个组件函数都是一个 fiber，组件的 fiber 有一个 hooks 数组，维护所有的 hooks，给一个例子：
 
+```jsx
+function ComplexComponent() {
+  const [count, setCount] = useState(0);                    // hook[0]
+  const [user, setUser] = useState({ name: '张三' });      // hook[1]
+  
+  const userRef = useRef(null);                            // hook[2]
+  
+  const handleClick = useCallback(() => {                   // hook[3]
+    setCount(c => c + 1);
+  }, []);
+  
+  useEffect(() => {                                        // hook[4]
+    console.log('count changed:', count);
+  }, [count]);
+  
+  const memoizedValue = useMemo(() => {                    // hook[5]
+    return count * 2;
+  }, [count]);
+
+  return <div>...</div>;
+}
+```
+hooks的存储如下：
+```js
+fiber.hooks = [
+  {
+    // useState hook for count
+    state: 0,
+    queue: [] // 状态更新队列
+  },
+  {
+    // useState hook for user
+    state: { name: '张三' },
+    queue: []
+  },
+  {
+    // useRef hook
+    memoizedState: {
+      current: null
+    }
+  },
+  {
+    // useCallback hook
+    memoizedState: {
+      callback: () => { setCount(c => c + 1) },
+      deps: [] // 空依赖数组
+    }
+  },
+  {
+    // useEffect hook
+    effect: {
+      create: () => { 
+        console.log('count changed:', count);
+        return () => { /* cleanup */ };
+      },
+      deps: [0], // count的当前值
+      destroy: undefined // 清理函数
+    }
+  },
+  {
+    // useMemo hook
+    memoizedState: {
+      value: 0, // 计算结果
+      deps: [0] // count的当前值
+    }
+  }
+];
+
+```
