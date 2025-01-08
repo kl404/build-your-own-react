@@ -15,7 +15,7 @@ const element = React.createElement("h1", { title: "foo" }, "Hello");
 ```
 
 编译时转化我们不用管，babel 去做了
-![alt text](image-2.png)
+![alt text](image01.png)
 
 ## Step 1：The createElement Function
 
@@ -68,11 +68,11 @@ requestIdleCallback(workLoop);
 3. select the next unit of work
    选择下一个工作单元
 
-![alt text](image-8.png)
+![alt text](image02.png)
 
 ## Step 5: Render and Commit
 为了不要生成一点就添加一点 Dom node，删除上面每个任务单元中的第一件事，然后添加一个 commit 阶段，统一添加真实Dom
-![alt text](image-5.png)
+![alt text](image03.png)
 
 我们生成的 Fiber 树 wipRoot(work in progress root)，在 commit 阶段，会转化成 Dom 树
 
@@ -80,7 +80,7 @@ requestIdleCallback(workLoop);
 ## Step 6: Reconciliation
 为了 diff，多了一个 currentRoot，和工作中的 wipRppt去reconcile，在生成每一个 fiber 节点的时候，去对比，是 crud 中的啥操作
 
-![alt text](image-4.png)
+![alt text](image04.png)
 
 #### newFiber = fn(oldFiber,newElement)
 
